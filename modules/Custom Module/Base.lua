@@ -113,37 +113,37 @@ end
 end
 
 function fpitch_trim_up()
-	if get(heli_beep) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
 		add(pitch_offset,(1/get(trim_rate_sec))*get(time_delta))
 		return 0
 	end
 end
 function fpitch_trim_down()
-	if get(heli_beep) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
 		add(pitch_offset,(1/get(trim_rate_sec))*-get(time_delta))
 		return 0
 	end
 end
 function faileron_trim_left()
-	if get(heli_beep) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
 		add(roll_offset,(1/get(trim_rate_sec))*-get(time_delta))
 		return 0
 	end
 end
 function faileron_trim_right()
-	if get(heli_beep) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
 		add(roll_offset,(1/get(trim_rate_sec))*get(time_delta))
 		return 0
 	end
 end
 function frudder_trim_left()
-	if get(heli_beep) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
 		add(yaw_offset,(1/get(trim_rate_sec))*-get(time_delta))
 		return 0
 	end
 end
 function frudder_trim_right()
-	if get(heli_beep) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
 		add(yaw_offset,(1/get(trim_rate_sec))*get(time_delta))
 		return 0
 	end
