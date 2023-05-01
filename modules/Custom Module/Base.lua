@@ -17,6 +17,7 @@ local pitch_offset = createGlobalPropertyf("pom/HeliTrim/Base/pitch_offset",0)
 local roll_offset = createGlobalPropertyf("pom/HeliTrim/Base/roll_offset",0)
 local yaw_offset = createGlobalPropertyf("pom/HeliTrim/Base/yaw_offset",0)
 local trim_pedals =  createGlobalPropertyi("pom/HeliTrim/Base/trim_pedals",0)
+local trim_cyclic =  createGlobalPropertyi("pom/HeliTrim/Base/trim_cyclic",0)
 local slow_reset_rate_sec = createGlobalPropertyf("pom/HeliTrim/Base/slow_reset_rate_sec",5)
 local time_delta = createGlobalPropertyd("pom/HeliTrim/Base/time_delta",0)
 local reset_trims = createGlobalPropertyi("pom/HeliTrim/Base/reset_trims",0)
@@ -48,8 +49,10 @@ function fTrimButton(phase)
 		roll = get(joy_mapped_axis_value,3) + get(roll_offset)
 		yaw = get(joy_mapped_axis_value,4) + get(yaw_offset)
 	elseif phase == SASL_COMMAND_CONTINUE then
-		set(pitch_offset,pitch-get(joy_mapped_axis_value,2))
-		set(roll_offset,roll-get(joy_mapped_axis_value,3))
+		if get(trim_cyclic) == 1 then
+			set(pitch_offset,pitch-get(joy_mapped_axis_value,2))
+			set(roll_offset,roll-get(joy_mapped_axis_value,3))
+		end
 		if get(trim_pedals) == 1 then
 			set(yaw_offset,yaw-get(joy_mapped_axis_value,4))
 		end
@@ -94,15 +97,20 @@ end
 
 function update()
 if get(is_helicopter) == 1 then
-	set(override_joystick_pitch,1)
-	set(override_joystick_roll,1)
 	--time delta
 	cur_t = get(total_running_time_sec)
 	set(time_delta,math.abs(cur_t-old_t))
 	old_t = cur_t
 	--
-	set(yoke_pitch_ratio,get(joy_mapped_axis_value,2)+get(pitch_offset))
-	set(yoke_roll_ratio,get(joy_mapped_axis_value,3)+get(roll_offset))
+	if get(trim_cyclic) == 1 then
+		set(override_joystick_pitch,1)
+		set(override_joystick_roll,1)
+		set(yoke_pitch_ratio,get(joy_mapped_axis_value,2)+get(pitch_offset))
+		set(yoke_roll_ratio,get(joy_mapped_axis_value,3)+get(roll_offset))
+	else
+		set(override_joystick_pitch,0)
+		set(override_joystick_roll,0)
+	end
 	if get(trim_pedals) == 1 then
 		set(override_joystick_heading,1)
 		set(yoke_heading_ratio,get(joy_mapped_axis_value,4)+get(yaw_offset))
@@ -113,37 +121,37 @@ end
 end
 
 function fpitch_trim_up()
-	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 and get(trim_cyclic) == 1 then
 		add(pitch_offset,(1/get(trim_rate_sec))*get(time_delta))
 		return 0
 	end
 end
 function fpitch_trim_down()
-	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 and get(trim_cyclic) == 1 then
 		add(pitch_offset,(1/get(trim_rate_sec))*-get(time_delta))
 		return 0
 	end
 end
 function faileron_trim_left()
-	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 and get(trim_cyclic) == 1 then
 		add(roll_offset,(1/get(trim_rate_sec))*-get(time_delta))
 		return 0
 	end
 end
 function faileron_trim_right()
-	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 and get(trim_cyclic) == 1 then
 		add(roll_offset,(1/get(trim_rate_sec))*get(time_delta))
 		return 0
 	end
 end
 function frudder_trim_left()
-	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 and get(trim_pedals) == 1 then
 		add(yaw_offset,(1/get(trim_rate_sec))*-get(time_delta))
 		return 0
 	end
 end
 function frudder_trim_right()
-	if get(heli_beep) == 1 and get(is_helicopter) == 1 then
+	if get(heli_beep) == 1 and get(is_helicopter) == 1 and get(trim_pedals) == 1 then
 		add(yaw_offset,(1/get(trim_rate_sec))*get(time_delta))
 		return 0
 	end

@@ -15,14 +15,14 @@ config {}
 ---------
 local Settings_window = contextWindow {
 	name			= "HeliTrim Settings",
-	position		= {500, 500, 500, 400},
-	maximumSize		= {1000,800},
+	position		= {500, 500, 500, 440},
+	maximumSize		= {1000,880},
 	visible			= false,
 	proportional	= true,
 	vrAuto			= true,
 	fbo 			= true,
 	fpsLimit		= 30,
-	components		= {settings{position={0, 0, 500, 400}}},
+	components		= {settings{position={0, 0, 500, 440}}},
 }
 ---------
 
