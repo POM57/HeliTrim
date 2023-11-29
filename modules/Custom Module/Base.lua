@@ -157,7 +157,7 @@ function frudder_trim_right()
 	end
 end
 
-function onPlaneUnoaded()
+function onPlaneUnloaded()
 	set(override_joystick_pitch,0)
 	set(override_joystick_roll,0)
 	set(override_joystick_heading,0)
